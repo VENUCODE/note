@@ -1,17 +1,33 @@
-import React from 'react'
-import Note from './note'
-import Data from "../data/notes"
-const Container = ({status}) => {
-    const handleLogout=()=>{
-        status(prev=>!prev);
-        return 
+import React, { useState, useEffect } from 'react';
+import Note from './note';
+import AddItem from './adder';
+
+const Container = () => {
+  const [notes, setNotes] = useState([]);
+
+  useEffect(() => {
+    // Load notes from local storage when the component mounts
+    const storedNotes = localStorage.getItem('notes');
+    if (storedNotes) {
+      setNotes(JSON.parse(storedNotes));
     }
+  }, []);
+
+  const addItem = (newItem) => {
+    const updatedNotes = [{...newItem,id:notes.length+1},...notes];
+    setNotes(updatedNotes);
+    // Save updated notes to local storage
+    localStorage.setItem('notes', JSON.stringify(updatedNotes));
+  };
+
   return (
     <div className='container'>
-        <button onClick={handleLogout}>Logout</button>
-        {Data.map((note)=> <Note key={note.id} data={note}/>)}
+      <div>
+        <AddItem onAddItem={addItem} />
+      </div>
+      {notes.map((note, index) => <Note key={index} data={note} />)}
     </div>
-  )
-}
+  );
+};
 
-export default Container
+export default Container;

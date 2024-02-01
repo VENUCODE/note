@@ -1,4 +1,4 @@
-const Data = [
+var Data = [
     {
       id: 1,
       heading: "Beautiful Sunset",
